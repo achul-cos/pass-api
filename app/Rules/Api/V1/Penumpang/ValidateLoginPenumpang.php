@@ -23,7 +23,7 @@ class ValidateLoginPenumpang implements ValidationRule
         if (filter_var($login, FILTER_VALIDATE_EMAIL)) {
             $query->where('email', $login);
         } else {
-            $query->where('no_telepon', $login);
+            $query->where('nomor_telepon', $login);
         }
 
         if (! $query->exists()) {

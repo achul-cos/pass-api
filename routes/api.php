@@ -27,6 +27,7 @@ Route::prefix('v1')->group(function () {
     Route::post('kendaraans/restore/{id}', [V1KendaraanController::class, 'restore'])->name('Kendaraans.restore');
 
     route::apiResource('penumpangs', V1PenumpangController::class);
+    Route::post('penumpangs/validate', [V1PenumpangController::class, 'validate'])->name('Penumpangs.validate');
 
     route::apiResource('pelabuhan', V1PelabuhanController::class);
 });

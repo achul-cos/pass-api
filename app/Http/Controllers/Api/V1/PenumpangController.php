@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Penumpang\StorePenumpangRequest;
 use App\Http\Requests\Api\V1\Penumpang\ValidatePenumpangRequest;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Penumpang;
 use Illuminate\Http\Request;
 use Throwable;
@@ -76,9 +77,39 @@ class PenumpangController extends Controller
         try {
             $data = $request->validated();
 
-            
+            $login = $data['login'];
+            $password = $data['password'];
+
+            $penumpang = Penumpang::where(function ($q) use ($login) {
+                if (filter_var($login, FILTER_VALIDATE_EMAIL)) {
+                    $q->where('email', $login);
+                } else {
+                    $q->where('nomor_telepon', $login);
+                }
+            })->first();
+
+            if (! $penumpang || ! Hash::check($password, $penumpang->password)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Login atau password salah',
+                ], 401);
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Login berhasil',
+                'data' => [
+                    'id' => $penumpang->id,
+                    'nomorTelepon' => $penumpang->nomor_telepon,
+                    'nama' => $penumpang->name,
+                    'email' => $penumpang->email,
+                ],
+            ]);
+
         } catch (\Throwable $th) {
-            
+            return response()->json([
+                'message' => 'Terjadi kesalahan pada server',
+            ], 500);
         }
     }
 }

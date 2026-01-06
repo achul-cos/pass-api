@@ -20,7 +20,6 @@ class DatabaseSeeder extends Seeder
             PenumpangSeeder::class,
             TiketSeeder::class,
             PetugasSeeder::class,
-            HardwareSeeder::class,
             ParkirSeeder::class,
             PelabuhanSeeder::class,
         ]);

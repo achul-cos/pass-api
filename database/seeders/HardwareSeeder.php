@@ -13,16 +13,6 @@ class HardwareSeeder extends Seeder
      */
     public function run(): void
     {
-        $welcomingGateway = Hardware::create([
-            'name' => 'Welcoming Gateway',
-            'desc' => 'Alat Scan Tiket dan Kendaraan di gerbang selamat datang',
-            'status' => 'offline',
-        ]);
-
-        $holdingGateway = Hardware::create([
-            'name' => 'Holding Gateway',
-            'desc' => 'Alat checkout di gerbang selamat datang',
-            'status' => 'offline',
-        ]);
+        //
     }
 }

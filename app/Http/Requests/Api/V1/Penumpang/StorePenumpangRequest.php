@@ -23,17 +23,25 @@ class StorePenumpangRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string'],
-            'email' => ['required', 'string'],
-            'nomor_telepon' => ['required', 'string'],
-            'password' => ['required', 'string'],
-            'password_confirmation' => ['required', 'string'],
+            'email' => ['required', 'email', 'max:255', 'unique:penumpangs,email'],
+            'nomor_telepon' => ['required', 'string', 'regex:/^\d+$/', 'digits_between:10,15', 'unique:penumpangs,nomor_telepon'],
+            'password' => ['required', 'string', 'confirmed'],
         ];
     }
 
     public function messages()
     {
         return [
-            //
+            'name.required' => 'Nama wajib diisi.',
+            'email.required' => 'Email wajib diisi',
+            'email.unique' => 'Email sudah terdaftar.',
+            'email.email' => 'Email harus memiliki format email standar.',
+            'nomor_telepon.required' => 'Nomor telepon wajib diisi.',
+            'nomor_telepon.unique' => 'Nomor telepon sudah terdaftar.',
+            'nomor_telepon.regex' => 'Nomor telepon hanya berupa angka.',
+            'nomor_telepon.digits_between' => 'Nomor telepon minimal 10 digit dan maksimal 15 digit.',
+            'password.required' => 'Password wajib diisi',
+            'password.confirmed' => 'Password dan konfirmasi password tidak sama.',
         ];
     }
 }

@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use PHPUnit\Framework\Attributes\Ticket;
 
 class Penumpang extends Authenticatable
 {
@@ -52,8 +51,8 @@ class Penumpang extends Authenticatable
         ];
     }
 
-    public function tickets()
+    public function tikets()
     {
-        return $this->hasMany(Ticket::class);
+        return $this->hasMany(Tiket::class);
     }
 }

@@ -42,9 +42,35 @@ class PenumpangController extends Controller
     public function store(StorePenumpangRequest $request)
     {
         try {
+            // Validasi data yang dimasukkan oleh user
             $data = $request->validated();
-        } catch (\Throwable $th) {
-            //throw $th;
+
+            // Membuat data akun
+            $penumpang = Penumpang::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'nomor_telepon' => $data['nomor_telepon'],
+                'password' => Hash::make($data['password']),
+            ]);
+
+            $responseData = [
+                'id' => $penumpang->id,
+                'name' => $penumpang->name,
+                'email' => $penumpang->email,
+                'nomorTelepon' => $penumpang->nomor_telepon,
+            ];
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Akun Berhasil DiDaftarkan',
+                'data' => $responseData,
+            ], 201);            
+
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ]);
         }
     }
 

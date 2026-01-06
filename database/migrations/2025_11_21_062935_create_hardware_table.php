@@ -13,11 +13,9 @@ return new class extends Migration
     {
         Schema::create('hardware', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('desc');
-            $table->enum('status', ['online', 'offline']);
-            $table->timestamp('last_online')->nullable();
-            $table->json('log')->nullable();
+            $table->string('code')->unique()->nullable();
+            $table->string('title')->nullable();
+            $table->text('desc')->nullable();
             $table->timestamps();
         });
     }

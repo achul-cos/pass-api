@@ -9,4 +9,10 @@ class Hardware extends Model
 {
     /** @use HasFactory<\Database\Factories\HardwareFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'code',
+        'title',
+        'desc',
+    ];    
 }

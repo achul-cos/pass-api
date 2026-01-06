@@ -9,6 +9,7 @@ use App\Http\Requests\Api\V1\Jadwal\UpdateJadwalRequest;
 use App\Http\Requests\Api\V1\Tiket\UpdateTiketRequest;
 use App\Http\Requests\Api\V1\Tiket\ValidateTiketRequest;
 use App\Http\Requests\Api\V1\Tiket\ValidateTiketWithOutNomorKendaraanRequest;
+use App\Models\Hardware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\Jadwal;
@@ -49,10 +50,6 @@ class TiketController extends Controller
                 $q->where('id', (int) $request->query('no'))
             );
 
-            // status
-            // $filteredQuery->when($request->filled('status'), fn ($q) =>
-            //     $q->where('status', $request->query('status'))
-            // );
             $filteredQuery->when($request->filled('status'), function ($q) use ($request) {
                 $normalized = $this->normalizeStatus($request->query('status'));
 
@@ -72,6 +69,11 @@ class TiketController extends Controller
                 $q->whereHas('penumpang', fn ($p) => $p->where('name', 'like', "%{$keyword}%"));
             });
 
+            // idPenumpang = penumpang_id tiket
+            $filteredQuery->when($request->filled('idPenumpang'), fn ($q) =>
+                $q->where('penumpang_id', (int) $request->query('idPenumpang'))
+            );            
+
             // rutePerjalanan = jadwal.nama_jadwal / lokasi_berangkat / lokasi_tiba
             $filteredQuery->when($request->filled('rutePerjalanan'), function ($q) use ($request) {
                 $keyword = $request->query('rutePerjalanan');
@@ -83,11 +85,6 @@ class TiketController extends Controller
                     });
                 });
             });
-
-            // waktu berangkat (opsional exact)
-            // $filteredQuery->when($request->filled('waktu'), function ($q) use ($request) {
-            //     $q->whereHas('jadwal', fn ($j) => $j->where('waktu_berangkat', $request->query('waktu')));
-            // });
 
             $filteredQuery->when($request->filled('waktu'), function ($q) use ($request) {
                 $this->applyWaktuFilter($q, (string) $request->query('waktu'));
@@ -599,11 +596,21 @@ class TiketController extends Controller
                         'request' => $data
                     ]);
                 } elseif ($selisihWaktu <= 2 and $selisihWaktu >= 0.25) {
+                    $log = Hardware::create([
+                        'code' => Str::uuid(),
+                        'title' => "Validasi Tiket #" . $findTiket['id'],
+                        'desc' => "Validasi Tiket #" . $findTiket['id'] . "Pada waktu " . $waktuDatang,
+                    ]);
+
                     return response()->json([
                         'status' => 'success',
                         'message' => 'Jadwal Keberangkatan sudah membuka gerbang (open gate), Silahkan Masuk',
                         'selisihWaktu' => $selisihWaktu,
-                        'request' => $data
+                        'request' => $data,
+                        'data' => [
+                            'idTiket' => $findTiket['id'],
+                            'checkInCode' => $log['code'],
+                        ]
                     ]);
                 } elseif ($selisihWaktu < 0.25) {
                     return response()->json([

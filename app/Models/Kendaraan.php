@@ -38,4 +38,14 @@ class Kendaraan extends Model
     {
         return $this->belongsTo(Parkir::class, 'parkir');
     }
+
+    public function parkir1()
+    {
+        return $this->belongsTo(Parkir::class, 'parkir1_id');
+    }
+
+    public function parkir2()
+    {
+        return $this->belongsTo(Parkir::class, 'parkir2_id');
+    }    
 }

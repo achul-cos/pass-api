@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('tiket_id')->constrained('tikets')->onDelete('cascade'); // foreign key ke tabel tikets
             $table->foreignId('penumpang_id')->constrained('penumpangs')->onDelete('cascade'); // foreign key ke tabel tikets
             $table->foreignId('jadwal_id')->constrained('jadwals')->onDelete('cascade'); // foreign key ke tabel jadwals
-            $table->foreignId('parkir1_id')->constrained('parkirs')->onDelete('cascade'); // foreign key ke tabel parkirs
+            $table->foreignId('parkir1_id')->constrained('parkirs')->onDelete('cascade')->nullable(); // foreign key ke tabel parkirs
             $table->foreignId('parkir2_id')->constrained('parkirs')->onDelete('cascade')->nullable(); // foreign key ke tabel parkirs
             $table->dateTime('waktu_check_in');
             $table->timestamps();
